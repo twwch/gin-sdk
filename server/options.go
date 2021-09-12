@@ -1,7 +1,7 @@
 package server
 
 import (
-	"gin-sdk/log"
+	"github.com/twwch/gin-sdk/log"
 )
 
 type Options struct {

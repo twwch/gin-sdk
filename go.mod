@@ -1,4 +1,4 @@
-module gin-sdk
+module github.com/twwch/gin-sdk
 
 go 1.13
 

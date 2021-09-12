@@ -2,7 +2,7 @@ package warper
 
 import (
 	"context"
-	"gin-sdk/middles"
+	"github.com/twwch/gin-sdk/middles"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"net/http"

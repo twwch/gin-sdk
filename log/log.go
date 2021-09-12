@@ -1,7 +1,7 @@
 package log
 
 import (
-	"gin-sdk/constant"
+	"github.com/twwch/gin-sdk/constant"
 	"github.com/lestrrat/go-file-rotatelogs"
 	"github.com/pkg/errors"
 	"github.com/rifflock/lfshook"
