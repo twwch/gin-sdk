@@ -1,0 +1,70 @@
+# This file is a template, and might need editing before it works on your project.
+image: golang:1.13-ci
+
+variables:
+  # Please edit to your GitLab project
+  GOPROXY: https://goproxy.cn,direct
+  GO111MODULE: "on"
+  DOCKER_REGISTRY: registry.cn-zhangjiakou.aliyuncs.com  
+  BRANCH: ${CI_COMMIT_REF_NAME}
+
+before_script:
+  - eval $(ssh-agent -s)
+  - echo "$SRC_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - chmod 644 ~/.ssh/known_hosts
+  - mkdir -p .gopath
+  - export GOPATH="$CI_PROJECT_DIR/.gopath"
+  - export PATH=$PATH:$GOPATH/bin
+
+stages:
+    - test
+    - package
+
+.basic: &basic
+  except:
+    variables:
+      - $CI_COMMIT_TITLE =~ /^ci:.*/
+  tags:
+    - public-runner001
+
+test:
+    <<: *basic
+    stage: test
+    cache:
+      key: go-cache
+      paths:
+        - .cache
+    script:
+      - mkdir -p .cache
+      - export GOPATH="$CI_PROJECT_DIR/.cache"
+      - make test
+
+build:
+  <<: *basic
+  stage: build
+  cache:
+    key: go-cache
+    paths:
+      - .cache
+  dependencies:
+    - test
+  script:
+    - make proto-gen
+    - make build
+
+package:
+    <<: *basic
+    stage: build  
+    cache:
+      key: go-cache
+      paths:
+        - .cache
+    dependencies:
+      - test
+    script:
+      - docker login -u ${XD_CI_USER} -p ${XD_CI_PASSWD} $DOCKER_REGISTRY
+      - make package
+
+
