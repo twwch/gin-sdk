@@ -17,10 +17,10 @@ func main() {
 		Name:    "github.com/twwch/gin-sdk",
 		Address: ":8001",
 		LogConf: &log.LogConf{
-			Path:     "D:\\var\\log\\github.com/twwch/gin-sdk",
-			ErrorLog: "github.com/twwch/gin-sdk-error.log",
-			ApiLog:   "github.com/twwch/gin-sdk-api.log",
-			PanicLog: "github.com/twwch/gin-sdk-panic.log",
+			Path:     "D:\\var\\log\\gin-sdk",
+			ErrorLog: "gin-sdk-error.log",
+			ApiLog:   "gin-sdk-api.log",
+			PanicLog: "gin-sdk-panic.log",
 		},
 	})
 	router := httpServer.GetEngine()
