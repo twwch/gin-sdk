@@ -1,11 +1,11 @@
-package log
+package twlog
 
 import (
-	"github.com/twwch/gin-sdk/constant"
 	"github.com/lestrrat/go-file-rotatelogs"
 	"github.com/pkg/errors"
 	"github.com/rifflock/lfshook"
 	log "github.com/sirupsen/logrus"
+	"github.com/twwch/gin-sdk/constant"
 	"path"
 	"time"
 )
@@ -27,7 +27,7 @@ func NewLog(l *LogConf) {
 	configLocalFilesystemLogger(l)
 }
 
-// config logrus log to local filesystem, with file rotation
+// config logrus twlog to local filesystem, with file rotation
 func configLocalFilesystemLogger(l *LogConf) {
 	witerMap := lfshook.WriterMap{}
 	logs := []string{l.ApiLog, l.DebugLog, l.ErrorLog, l.WarnLog, l.PanicLog, l.FatalLog, l.TraceLog}
@@ -63,6 +63,6 @@ func configLocalFilesystemLogger(l *LogConf) {
 			}
 		}
 	}
-	lfHook := lfshook.NewHook(witerMap, &log.JSONFormatter{TimestampFormat: constant.FullDateTimeFormat, DisableHTMLEscape:true})
+	lfHook := lfshook.NewHook(witerMap, &log.JSONFormatter{TimestampFormat: constant.FullDateTimeFormat, DisableHTMLEscape: true})
 	log.AddHook(lfHook)
 }

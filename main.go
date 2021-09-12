@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/twwch/gin-sdk/handler"
 	"github.com/twwch/gin-sdk/handler/test"
-	"github.com/twwch/gin-sdk/log"
 	"github.com/twwch/gin-sdk/server"
+	"github.com/twwch/gin-sdk/twlog"
 )
 
 var httphandlers = []handler.Handler{
@@ -16,11 +16,11 @@ func main() {
 	httpServer := server.NewServer(server.Options{
 		Name:    "github.com/twwch/gin-sdk",
 		Address: ":8001",
-		LogConf: &log.LogConf{
-			Path:     "D:\\var\\log\\gin-sdk",
-			ErrorLog: "gin-sdk-error.log",
-			ApiLog:   "gin-sdk-api.log",
-			PanicLog: "gin-sdk-panic.log",
+		LogConf: &twlog.LogConf{
+			Path:     "D:\\var\\twlog\\gin-sdk",
+			ErrorLog: "gin-sdk-error.twlog",
+			ApiLog:   "gin-sdk-api.twlog",
+			PanicLog: "gin-sdk-panic.twlog",
 		},
 	})
 	router := httpServer.GetEngine()

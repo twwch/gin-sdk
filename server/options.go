@@ -1,13 +1,13 @@
 package server
 
 import (
-	"github.com/twwch/gin-sdk/log"
+	"github.com/twwch/gin-sdk/twlog"
 )
 
 type Options struct {
 	Name       string
 	Address    string
-	LogConf    *log.LogConf
+	LogConf    *twlog.LogConf
 	WithExport *ExportOptions
 }
 

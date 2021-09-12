@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	myLog "github.com/twwch/gin-sdk/log"
+	myLog "github.com/twwch/gin-sdk/twlog"
 	"github.com/twwch/gin-sdk/middles"
 	"github.com/twwch/gin-sdk/utils/warper"
 	"github.com/gin-gonic/gin"
