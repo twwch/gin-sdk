@@ -22,9 +22,9 @@ func SetHost(address string) Option {
 		options.Host = address
 	}
 }
-func SetHeaders(address string) Option {
+func SetHeaders(headers map[string]string) Option {
 	return func(options *Options) {
-		options.Host = address
+		options.Headers = headers
 	}
 }
 
@@ -34,19 +34,19 @@ func SetTimeout(timeout time.Duration) Option {
 	}
 }
 
-func SetRetryCount(retryCount int) Option  {
+func SetRetryCount(retryCount int) Option {
 	return func(options *Options) {
 		options.RetryCount = retryCount
 	}
 }
 
-func SetRetryWaitTime(retryWaitTime time.Duration) Option  {
+func SetRetryWaitTime(retryWaitTime time.Duration) Option {
 	return func(options *Options) {
 		options.RetryWaitTime = retryWaitTime
 	}
 }
 
-func SetRetryMaxWaitTime(retryMaxWaitTime time.Duration) Option  {
+func SetRetryMaxWaitTime(retryMaxWaitTime time.Duration) Option {
 	return func(options *Options) {
 		options.RetryMaxWaitTime = retryMaxWaitTime
 	}
