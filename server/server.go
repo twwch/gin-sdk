@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	myLog "github.com/twwch/gin-sdk/twlog"
-	"github.com/twwch/gin-sdk/middles"
-	"github.com/twwch/gin-sdk/utils/warper"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+	"github.com/twwch/gin-sdk/middles"
+	myLog "github.com/twwch/gin-sdk/twlog"
+	"github.com/twwch/gin-sdk/utils/warper"
 	"net/http"
 )
 
@@ -58,6 +58,7 @@ func (s *server) GetEngine() *gin.Engine {
 	return s.engine
 }
 
+// 统一配置导出接口
 func Route(routes gin.IRoutes, method string, path string, function interface{}, options ...Options) {
 	for _, op := range options {
 		if op.WithExport.IsExport {

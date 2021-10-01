@@ -2,9 +2,9 @@ package warper
 
 import (
 	"context"
-	"github.com/twwch/gin-sdk/middles"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/twwch/gin-sdk/middles"
 	"net/http"
 	"reflect"
 )
@@ -19,8 +19,9 @@ type APIException struct {
 }
 
 type RespStruct struct {
-	Code int64       `json:"code"`
-	Data interface{} `json:"data,omitempty"`
+	Code    int64       `json:"code"`
+	Data    interface{} `json:"data,omitempty"`
+	Message interface{} `json:"message,omitempty"`
 }
 
 func (e *APIException) Error() string {
@@ -98,7 +99,7 @@ func createHandlerFuncWithLogger(method interface{}, isExport bool) gin.HandlerF
 		var response, e interface{}
 		if !isExport {
 			response, e = results[0].Interface(), results[1].Interface()
-		}else{
+		} else {
 			e = results[0].Interface()
 		}
 		if e != nil {
@@ -124,6 +125,6 @@ func createHandlerFuncWithLogger(method interface{}, isExport bool) gin.HandlerF
 }
 
 func getRetData(value interface{}) interface{} {
-	ret := &RespStruct{Code: 0, Data: value}
+	ret := &RespStruct{Code: 0, Data: value, Message: "成功"}
 	return ret
 }

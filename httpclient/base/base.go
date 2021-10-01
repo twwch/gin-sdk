@@ -17,6 +17,9 @@ type HttpClient interface {
 	NewRequest(ctx context.Context) (request *resty.Request)
 
 	PostJSON(ctx context.Context, path string, req, resp interface{}) (err error)
+	Put(ctx context.Context, path string, req, resp interface{}) (err error)
+	Patch(ctx context.Context, path string, req, resp interface{}) (err error)
+	Delete(ctx context.Context, path string, req, resp interface{}) (err error)
 	Get(ctx context.Context, path string, req map[string]string, resp interface{}) (err error)
 }
 
@@ -67,6 +70,9 @@ func (c *client) PostJSON(ctx context.Context, path string, req, resp interface{
 	if resp != nil {
 		r.SetResult(resp)
 	}
+	if req != nil {
+		r.SetBody(req)
+	}
 	rsp, err := r.Post(path)
 	if err != nil {
 		return fmt.Errorf("post:{%s} param:%+v err: %v", r.URL, req, err)
@@ -74,6 +80,63 @@ func (c *client) PostJSON(ctx context.Context, path string, req, resp interface{
 	httpStatusCode := rsp.StatusCode()
 	if httpStatusCode < http.StatusOK || httpStatusCode >= http.StatusMultipleChoices {
 		return fmt.Errorf("post:{%s} param:%+v failed: %v", rsp.Request.URL, req, httpStatusCode)
+	}
+	return nil
+}
+
+func (c *client) Put(ctx context.Context, path string, req, resp interface{}) error {
+	r := c.kernel.NewRequest().SetContext(ctx)
+	if resp != nil {
+		r.SetResult(resp)
+	}
+	if req != nil {
+		r.SetBody(req)
+	}
+	rsp, err := r.Put(path)
+	if err != nil {
+		return fmt.Errorf("put:{%s} param:%+v err: %v", r.URL, req, err)
+	}
+	httpStatusCode := rsp.StatusCode()
+	if httpStatusCode < http.StatusOK || httpStatusCode >= http.StatusMultipleChoices {
+		return fmt.Errorf("put:{%s} param:%+v failed: %v", rsp.Request.URL, req, httpStatusCode)
+	}
+	return nil
+}
+
+func (c *client) Patch(ctx context.Context, path string, req, resp interface{}) error {
+	r := c.kernel.NewRequest().SetContext(ctx)
+	if resp != nil {
+		r.SetResult(resp)
+	}
+	if req != nil {
+		r.SetBody(req)
+	}
+	rsp, err := r.Patch(path)
+	if err != nil {
+		return fmt.Errorf("patch:{%s} param:%+v err: %v", r.URL, req, err)
+	}
+	httpStatusCode := rsp.StatusCode()
+	if httpStatusCode < http.StatusOK || httpStatusCode >= http.StatusMultipleChoices {
+		return fmt.Errorf("patch:{%s} param:%+v failed: %v", rsp.Request.URL, req, httpStatusCode)
+	}
+	return nil
+}
+
+func (c *client) Delete(ctx context.Context, path string, req, resp interface{}) error {
+	r := c.kernel.NewRequest().SetContext(ctx)
+	if resp != nil {
+		r.SetResult(resp)
+	}
+	if req != nil {
+		r.SetBody(req)
+	}
+	rsp, err := r.Delete(path)
+	if err != nil {
+		return fmt.Errorf("delete:{%s} param:%+v err: %v", r.URL, req, err)
+	}
+	httpStatusCode := rsp.StatusCode()
+	if httpStatusCode < http.StatusOK || httpStatusCode >= http.StatusMultipleChoices {
+		return fmt.Errorf("delete:{%s} param:%+v failed: %v", rsp.Request.URL, req, httpStatusCode)
 	}
 	return nil
 }

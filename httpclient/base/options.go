@@ -28,11 +28,35 @@ func SetHeaders(address string) Option {
 	}
 }
 
+func SetTimeout(timeout time.Duration) Option {
+	return func(options *Options) {
+		options.Timeout = timeout
+	}
+}
+
+func SetRetryCount(retryCount int) Option  {
+	return func(options *Options) {
+		options.RetryCount = retryCount
+	}
+}
+
+func SetRetryWaitTime(retryWaitTime time.Duration) Option  {
+	return func(options *Options) {
+		options.RetryWaitTime = retryWaitTime
+	}
+}
+
+func SetRetryMaxWaitTime(retryMaxWaitTime time.Duration) Option  {
+	return func(options *Options) {
+		options.RetryMaxWaitTime = retryMaxWaitTime
+	}
+}
+
 func newOptions(opts ...Option) *Options {
 	options := &Options{
 		Host:             "",
 		Timeout:          3 * time.Second,
-		RetryCount:       0,
+		RetryCount:       3,
 		RetryWaitTime:    time.Duration(100) * time.Millisecond,
 		RetryMaxWaitTime: time.Duration(2000) * time.Millisecond,
 	}
