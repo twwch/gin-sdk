@@ -67,6 +67,29 @@ func (m *Base) Find(ctx context.Context, filter, results interface{}, opts ...*o
 	return cur.All(ctx, results)
 }
 
+func (m *Base) FindOneAndDelete(ctx context.Context, filter interface{}, result interface{}, opts ...*options.FindOneAndDeleteOptions) error {
+	collection := m.Mongo.Database(m.database).Collection(m.collection)
+	return collection.FindOneAndDelete(ctx, filter, opts...).Decode(result)
+}
+
+func (m *Base) FindOneAndReplace(ctx context.Context,filter, replacement, result interface{},opts ...*options.FindOneAndReplaceOptions) error {
+	collection := m.Mongo.Database(m.database).Collection(m.collection)
+	return collection.FindOneAndReplace(ctx, filter, replacement, opts...).Decode(result)
+}
+
+func (m *Base) FindOneAndUpdate(ctx context.Context, filter, update, result interface{}, opts ...*options.FindOneAndUpdateOptions) error {
+	collection := m.Mongo.Database(m.database).Collection(m.collection)
+	return collection.FindOneAndUpdate(ctx, filter, update, opts...).Decode(result)
+}
+
+func (m *Base) FindOneAndUpsert(ctx context.Context, filter, update, result interface{}, opts ...*options.FindOneAndUpdateOptions) error {
+	collection := m.Mongo.Database(m.database).Collection(m.collection)
+	rd := options.After
+	optUpsert := options.FindOneAndUpdate().SetUpsert(true).SetReturnDocument(rd)
+	opts = append(opts, optUpsert)
+	return collection.FindOneAndUpdate(ctx, filter, update, opts...).Decode(result)
+}
+
 //更新单个文档
 func (m *Base) UpdateOne(ctx context.Context, filter interface{}, update interface{}, opts ...*options.UpdateOptions) (*mongo.UpdateResult, error) {
 	collection := m.Mongo.Database(m.database).Collection(m.collection)
@@ -79,8 +102,15 @@ func (m *Base) UpdateMany(ctx context.Context, filter interface{}, update interf
 	return collection.UpdateMany(ctx, filter, update, opts...)
 }
 
+func (m *Base) Upsert(ctx context.Context, filter, replacement interface{}, opts ...*options.UpdateOptions) (*mongo.UpdateResult, error) {
+	collection := m.Mongo.Database(m.database).Collection(m.collection)
+	optUpsert := options.Update().SetUpsert(true)
+	opts = append(opts, optUpsert)
+	return collection.UpdateOne(ctx, filter, replacement, opts...)
+}
+
 //删除文档
-func (m *Base) Delete(ctx context.Context, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
+func (m *Base) DeleteOne(ctx context.Context, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
 	collection := m.Mongo.Database(m.database).Collection(m.collection)
 	return collection.DeleteOne(ctx, filter, opts...)
 
@@ -90,4 +120,14 @@ func (m *Base) Delete(ctx context.Context, filter interface{}, opts ...*options.
 func (m *Base) DeleteMany(ctx context.Context, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
 	collection := m.Mongo.Database(m.database).Collection(m.collection)
 	return collection.DeleteMany(ctx, filter, opts...)
+}
+
+func (m *Base) Count(ctx context.Context, filter interface{}, opts ...*options.CountOptions) (int64, error)  {
+	collection := m.Mongo.Database(m.database).Collection(m.collection)
+	return collection.CountDocuments(ctx, filter, opts...)
+}
+
+func (m *Base) ReplaceOne(ctx context.Context,filter, replacement interface{},opts ...*options.ReplaceOptions) (*mongo.UpdateResult, error) {
+	collection := m.Mongo.Database(m.database).Collection(m.collection)
+	return collection.ReplaceOne(ctx, filter, replacement, opts...)
 }
