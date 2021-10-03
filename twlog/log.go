@@ -51,7 +51,7 @@ func configLocalFilesystemLogger(l *LogConf) {
 				}
 				file := path.Join(l.Path, logItem)
 				apiWaiter, err := rotatelogs.New(
-					file,
+					file+".%Y%m%d",
 					rotatelogs.WithLinkName(file),               // 生成软链，指向最新日志文件
 					rotatelogs.WithMaxAge(l.MaxAge),             // 文件最大保存时间
 					rotatelogs.WithRotationTime(l.RotationTime), // 日志切割时间间隔
