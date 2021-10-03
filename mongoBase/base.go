@@ -10,7 +10,7 @@ import (
 type Base struct {
 	database   string
 	collection string
-	Mongo *mongo.Client
+	Mongo      *mongo.Client
 }
 
 func NewBase(host, database, collection string) *Base {
@@ -23,10 +23,10 @@ func NewBase(host, database, collection string) *Base {
 
 //连接设置
 func setConnect(mongoUrl string) *mongo.Client {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	// 连接池
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUrl).SetMaxPoolSize(20))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUrl).SetMaxPoolSize(30))
 	if err != nil {
 		panic(err)
 	}
@@ -72,7 +72,7 @@ func (m *Base) FindOneAndDelete(ctx context.Context, filter interface{}, result 
 	return collection.FindOneAndDelete(ctx, filter, opts...).Decode(result)
 }
 
-func (m *Base) FindOneAndReplace(ctx context.Context,filter, replacement, result interface{},opts ...*options.FindOneAndReplaceOptions) error {
+func (m *Base) FindOneAndReplace(ctx context.Context, filter, replacement, result interface{}, opts ...*options.FindOneAndReplaceOptions) error {
 	collection := m.Mongo.Database(m.database).Collection(m.collection)
 	return collection.FindOneAndReplace(ctx, filter, replacement, opts...).Decode(result)
 }
@@ -122,12 +122,34 @@ func (m *Base) DeleteMany(ctx context.Context, filter interface{}, opts ...*opti
 	return collection.DeleteMany(ctx, filter, opts...)
 }
 
-func (m *Base) Count(ctx context.Context, filter interface{}, opts ...*options.CountOptions) (int64, error)  {
+func (m *Base) Count(ctx context.Context, filter interface{}, opts ...*options.CountOptions) (int64, error) {
 	collection := m.Mongo.Database(m.database).Collection(m.collection)
 	return collection.CountDocuments(ctx, filter, opts...)
 }
 
-func (m *Base) ReplaceOne(ctx context.Context,filter, replacement interface{},opts ...*options.ReplaceOptions) (*mongo.UpdateResult, error) {
+func (m *Base) ReplaceOne(ctx context.Context, filter, replacement interface{}, opts ...*options.ReplaceOptions) (*mongo.UpdateResult, error) {
 	collection := m.Mongo.Database(m.database).Collection(m.collection)
 	return collection.ReplaceOne(ctx, filter, replacement, opts...)
+}
+
+func (m *Base) Aggregate(ctx context.Context, pipeline, results interface{}, opts ...*options.AggregateOptions) error {
+	collection := m.Mongo.Database(m.database).Collection(m.collection)
+	cursor, err := collection.Aggregate(ctx, pipeline, opts...)
+	if err != nil {
+		return err
+	}
+	return cursor.All(ctx, results)
+}
+
+func (m *Base) Collection() *mongo.Collection {
+	return m.Mongo.Database(m.database).Collection(m.collection)
+}
+
+func (m *Base) Database() *mongo.Database {
+	return m.Mongo.Database(m.database)
+}
+
+func (m *Base) BulkWrite(ctx context.Context, models []mongo.WriteModel, opts ...*options.BulkWriteOptions) (*mongo.BulkWriteResult, error) {
+	collection := m.Mongo.Database(m.database).Collection(m.collection)
+	return collection.BulkWrite(ctx, models, opts...)
 }
