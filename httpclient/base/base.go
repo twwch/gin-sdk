@@ -154,7 +154,7 @@ func (c *client) Get(ctx context.Context, path string, req map[string]string, re
 		return fmt.Errorf("get:{%s} err: %v", r.URL, err)
 	}
 	if !rsp.IsSuccess() {
-		return errors.New(fmt.Sprintf("check getResp.IsSuccess() failed, code is %v", rsp.StatusCode()))
+		return errors.New(fmt.Sprintf("check getResp.IsSuccess() failed, code is %v url: %s, req: %v", rsp.StatusCode(), r.URL, req))
 	}
 	return nil
 }
